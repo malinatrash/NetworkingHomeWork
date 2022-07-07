@@ -8,12 +8,23 @@
 import UIKit
 
 class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    
+    @IBOutlet weak var numberTextField: UITextField!
+    @IBOutlet weak var factTypeSegmentedControl: UISegmentedControl!
+    
+    private var link: String {
+        "http://numbersapi.com/\(numberTextField.text ?? "0")/\(defineType())?json"
     }
-
-
+    
+    private func defineType() -> String {
+        switch factTypeSegmentedControl.selectedSegmentIndex {
+        case 0: return "math"
+        default: return "trivia"
+        }
+    }
+    
+    @IBAction func getFactButtonPressed() {
+        
+    }
 }
 
