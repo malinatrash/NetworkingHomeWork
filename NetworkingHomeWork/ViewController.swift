@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func getFactButtonPressed() {
-        guard let url = URL(string: link) else { return }
+        guard let url = URL(string: link) else { return }
         
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data else {
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
                 return
             }
             
-            do {
+            do {
                 let fact = try JSONDecoder().decode(Fact.self, from: data)
                 print(fact)
                 self.showFactInfoAlert(title: "Interesting fact!", message: fact.text ?? "")
