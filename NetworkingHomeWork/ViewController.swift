@@ -37,24 +37,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func getFactButtonPressed() {
-        guard let url = URL(string: link) else { return }
-        
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data = data else {
-                print(error?.localizedDescription ?? "No error description")
-                return
-            }
-            
-            do {
-                let fact = try JSONDecoder().decode(Fact.self, from: data)
-                print(fact)
+        NetworkManager.shared.fetchData(from: link) { fact in
+            DispatchQueue.main.async {
+                let fact = fact
                 self.showFactInfoAlert(title: "Interesting fact!", message: fact.text ?? "")
-            } catch let error {
-                self.showFactInfoAlert(title: "Error", message: "Some Error")
-                print(error.localizedDescription)
             }
-            
-        }.resume()
+        }
     }
 }
+
 
