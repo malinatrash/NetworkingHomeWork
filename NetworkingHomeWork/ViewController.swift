@@ -6,13 +6,16 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var numberTextField: UITextField!
     @IBOutlet weak var factTypeSegmentedControl: UISegmentedControl!
     
-    private var link: String {
+    private var fact: Fact?
+    
+    var link: String {
         getLink()
     }
     
@@ -25,11 +28,7 @@ class ViewController: UIViewController {
     
     private func showFactInfoAlert(title: String, message: String) {
         DispatchQueue.main.async {
-            let alert = UIAlertController(
-                title: title,
-                message: message,
-                preferredStyle: .alert
-            )
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default)
             alert.addAction(okAction)
             self.present(alert, animated: true)
@@ -37,12 +36,16 @@ class ViewController: UIViewController {
     }
     
     @IBAction func getFactButtonPressed() {
-        NetworkManager.shared.fetchData(from: link) { fact in
-            DispatchQueue.main.async {
-                let fact = fact
-                self.showFactInfoAlert(title: "Interesting fact!", message: fact.text ?? "")
+        NetworkManager.shared.fetchDataWithAlamofire(link: link) { result in
+            switch result {
+            case .success(let fact):
+                self.fact = fact
+            case .failure(let error):
+                print(error)
             }
+            self.showFactInfoAlert(title: "Interesting fact", message: self.fact?.text ?? "")
         }
+        
     }
 }
 
